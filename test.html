@@ -1,0 +1,1680 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <!-- This code is part of a tutorial from Email on Acid: https://www.emailonacid.com/blog/article/email-development/build-an-interactive-carousel-for-email -->
+	<title>Interactive Carousel</title>
+	<!--[if !mso]><!-->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<!--<![endif]-->
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	
+	<style type="text/css">
+	   
+	    @media screen and (-webkit-min-device-pixel-ratio:0) , screen and (-moz-device-pixel-ratio) {
+	      .webkit-only {display:inline !important; max-height:none !important;}
+	      .webkit-off {display:none !important; max-height:0 !important; overflow:hidden !important; mso-hide:all !important; height:0 !important;}
+	      .★:not(#★) {display:none !important;}
+	    }
+
+	    @media screen yahoo {
+	      .yhoohide {display:none !important; max-height:0 !important; overflow:hidden !important; height:0 !important;}
+	      .fb_col {background-color:#2a2a82 !important;}
+	      .fb_colbot {background-color:#c33448 !important;}
+	      * {overflow:visible!important; -ms-overflow-style:-ms-autohiding-scrollbar;}
+	    }
+
+	    .@media screen and (-webkit-min-device-pixel-ratio:0) , screen and (-moz-device-pixel-ratio) {
+	      .webkit-only.★:not(#★) {display:none !important;}
+	    }
+
+	    .webkit-off.★:not(#★) {display:table !important;}
+	
+	</style>
+
+    <style type="text/css">
+		body {
+		margin: 0px;
+		padding: 0px;
+	}
+	
+	a img {
+		border: none !important;
+	}
+	
+	table {
+		mso-table-lspace: 0pt;
+		mso-table-rspace: 0pt;
+	}
+	
+	table td {
+		border-collapse: collapse;
+	}
+	
+	.yahoo {
+		display:none;
+	}
+
+
+	
+
+	@media only screen and (max-width: 480px), (max-device-width: 480px) {
+	
+		.wrapper {
+			min-width: 0px !important;
+		}
+		
+		.shrink {
+			width: 320px !important;
+			min-width:0px !important;
+		}
+		
+		.hide {
+			display: none !important;
+			visibility: none !important;
+			overflow: hidden !important;
+		}
+	
+	}
+	
+	@media only screen and (-webkit-min-device-pixel-ratio: 1), (min--moz-device-pixel-ratio: 1), (max-width: 480px), (max-device-width: 480px) {
+	
+		#CarouselWrapper {
+			width: 640px !important;
+			position: relative;
+			display: block;
+			overflow: hidden;
+		}
+		
+		.CarouselMain {
+			width: 640px !important;
+    		height: 950px !important;
+		}
+
+		.button {
+			visibility: visible !important;
+		    max-height: 57px !important;
+		    width: 100px !important;
+		    padding: 10px 0px 10px 0px;
+			display: block !important;
+			position: absolute !important;
+			text-align: center;
+			z-index: 7;
+			background-color: #262626;
+			box-sizing: content-box;
+			color: #ffffff !important;
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 13px !important;
+			line-height:16px !important;
+			font-weight:bold;
+			cursor:pointer;
+
+			-webkit-transition: 0.1s ease-in;
+			-moz-transition: 0.1s ease-in;
+			-ms-transition: 0.1s ease-in;
+			-o-transition: 0.1s ease-in;
+		}
+		
+		.swoosh {
+			position: relative;
+			transition: all 0.3s ease-out;
+			-webkit-transition: all 0.3s ease-out;
+			-moz-transition: all 0.3s ease-out;
+			-ms-transition: all 0.3s ease-out;
+			-o-transition: all 0.3s ease-out;
+		}
+		
+		.slide1-content,
+		.slide2-content,
+		.slide3-content {
+			display: block;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			width: 640px;
+			height: 520px;
+			background-color: #FFFFFF; 
+		}
+	}
+	
+	@media only screen and (-webkit-min-device-pixel-ratio: 1), (min--moz-device-pixel-ratio: 1) {
+	
+		.slide1 { top: 10px; left: 20px;}
+		.slide1-content {left: 0px;}
+		.slide1:hover { background-color: #37B330;}
+		#slide-1:checked ~ .slide1 {background-color: #37B330 !important;}
+		#slide-1:checked + span + table .swoosh { left: 0px !important; }
+		
+		.slide2 { top: 10px; left: 130px; }
+		.slide2-content { left: 640px; }
+		.slide2:hover { background-color: #37B330;}
+		#slide-2:checked ~ .slide2 {background-color: #37B330 !important;}
+		#slide-2:checked + span + table .swoosh { left: -640px !important; }
+		
+		.slide3 { top: 10px; left: 240px; }
+		.slide3-content { left: 1280px; }
+		.slide3:hover { background-color: #37B330;}
+		#slide-3:checked ~ .slide3 {background-color: #37B330 !important;}
+		#slide-3:checked + span + table .swoosh { left: -1280px !important; }
+		.w600{width: 640px !important;}
+
+	}
+	
+	@media only screen and (max-width: 480px),	(max-device-width: 480px) {
+	
+		#CarouselWrapper, .CarouselMain {
+			width: 320px !important;
+			height: 1150px !important;
+		}
+		
+		.slide1-content,
+		.slide2-content,
+		.slide3-content {
+			top: 0px;
+			width: 320px !important;
+			height: 3570px !important;
+			background-repeat: no-repeat;
+		}
+		
+		.button {
+			max-height: 32px !important;
+			width: 52px !important;
+			border: none;
+			padding: 8px 0px 8px 0px;
+		}
+		
+		.slide1 { top: 0px; left: 20px;}
+	    .slide1-content {left: 0px; width: 100%; }
+	    #slide-1:checked + span + table .swoosh { left: 0px !important;}
+	    .slide1:before { content: "1" }
+	    
+	    .slide2 { top: 0px; left: 81px; }
+	    .slide2-content { left: 320px; width: 100%; }
+	    #slide-2:checked + span + table .swoosh { left: -320px !important; }
+	    .slide2:before { content: "2"; }
+	    
+	    .slide3 { top: 0px; left: 143px; }
+	    .slide3-content { left: 640px; width: 100%; }
+	    #slide-3:checked + span + table .swoosh { left: -640px !important; }
+	    .slide3:before { content: "3"; }
+
+	    .swoosh{
+	    }
+
+	    .img_mob{
+	    	width: 320px !important;
+	    }
+		.mobileOn {
+            display: block!important;
+            height: auto!important;
+            width: 100%!important;
+            max-height: inherit!important;
+        }
+        .hide {
+            display: none!important;
+        }
+        .show {
+            display: block!important;
+        }
+        .table {
+            width: 320px !important;
+        }
+        .width_full {
+            width: 100% !important;
+        }
+        .stack_block {
+            display: block !important;
+        }
+        .img_mob {
+            width: 100% !important;
+            display: block;
+            height: auto !important;
+        }
+        .center_mob {
+            margin: 0 auto!important;
+        }
+        .center_text {
+            text-align: center!important;
+        }
+        .pl10 {
+
+            padding-left: 10px !important;
+        }
+        .pl0{
+          padding-left:0px !important;
+        }
+        .pt10 {
+            padding-top: 10px!important;
+        }
+        .pt16 {
+            padding-top: 16px!important;
+        }
+        .pt0{
+            padding-top: 0px !important;
+        }
+        .pt30 {
+            padding-top: 30px!important;
+        }
+        .border_0 {
+            border: 0!important;
+        }
+        .border_btm {
+            border-bottom: 2px solid #ffffff !important;
+        }
+        .width33 {
+
+            width: 33% !important;
+        }
+        .w70{
+    		width: 70% !important;
+        }
+        .pl5{
+            padding-left: 5px !important;
+        }
+        .h50{
+        	height: 50px !important;
+        }
+	}
+	</style>
+
+	
+</head>
+
+<body style="background-color:#6c6c6c;" bgcolor="#6c6c6c">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#6c6c6c" style="width: 100% !important; table-layout:fixed;">
+		<tr>
+			<td valign="top" align="center">
+				<table width="640" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF" class="table">
+	                <tr>
+	                    <td align="center" valign="top">
+
+	                        <table width="90%" border="0" cellspacing="0" cellpadding="0">
+	                            <tr>
+	                                <td align="left" valign="top" style="padding-top:15px;font-family: Arial, sans-serif;font-size:11px;line-height:normal;color:#000001;">
+	                                    
+	                                  
+	                                  
+	                                  
+	                                  Is this email not displaying correctly? <a href="http://e.rbs.com/?7RJhFv4KEan18ZEnm-crLPT7gfWOYlw77" target="_blank" style="color:#000000;">View it in your browser</a>.
+	                                </td>
+	                            </tr>
+	                        </table>
+
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td height="10" style="mso-line-height-ruel:exactly; font-size:10px; line-height:10px;"></td>
+	                </tr>
+	            
+	                <tr>
+	                    <td align="center" valign="top">
+	                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="" bgcolor="#002664">
+
+	                            <tr>
+	                                <td align="left" valign="top" class="stack_block">
+	                                    <a href="http://e.rbs.com/?RREhFv4KH.n7RnJxM-gLLbJ1PfWct4wQR&amp;http://digital.ulsterbank.co.uk/?extcam=U_EMC_0_MTA_MTAGen_MT03692_Link_3" target="_blank"><img src="images/ub-core-ca-hero-top.jpg" width="640" style="display:block; height:auto;" border="0" class="hide" alt=""></a>
+	                                    <!--[if !mso]><!-- -->
+	                                    <div class="mobileOn" style="font-size: 0; width:0; max-height: 0; overflow: hidden; display: none; ">
+	                                        <a href="http://e.rbs.com/?RREhFv4KH.n7RnJxM-gLLbJ1PfWct4wQR&amp;http://digital.ulsterbank.co.uk/?extcam=U_EMC_0_MTA_MTAGen_MT03692_Link_3" target="_blank"><img src="images/ub-core-ca-hero-top_mob.jpg" width="320" style="display:block; height:auto;" border="0" class="img_mob" alt=""></a>
+	                                    </div>
+	                                    <!--<![endif]-->
+	                                </td>
+	                            </tr>
+
+	                        </table>
+	                    </td>
+	                </tr>
+
+	                <tr>
+	                    <td align="center" valign="top" class="stack_block" bgcolor="#002a66">
+	                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="hide">
+	                            <tr>
+	                                <td width="249" align="left" valign="top" style="font-family: Arial, sans-serif; font-size:19px; line-height:21px; color:#ffffff; padding-left:30px;">
+	                                    We're making changes to your <strong>ufirstgold and savings account(s)</strong>
+	                                </td>
+	                                <td align="center" valign="top">
+	                                    <a href="http://e.rbs.com/?RREhFv4KH.n7RnJxM-gLLbJ1PfWct4wQR&amp;http://digital.ulsterbank.co.uk/?extcam=U_EMC_0_MTA_MTAGen_MT03692_Link_3" target="_blank">
+	                                 <img src="images/ub-core-ca-mid-right.jpg" width="391" height="80" style="display:block; height:auto;" border="0" class="img_mob" alt="">
+	                                                </a>
+	                                </td>
+	                            </tr>
+	                        </table>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td align="center" valign="top" bgcolor="#002a66">
+	                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="">
+
+	                            <tr>
+	                                <td align="left" valign="top" class="stack_block">
+	                                    <a href="http://e.rbs.com/?RREhFv4KH.n7RnJxM-gLLbJ1PfWct4wQR&amp;http://digital.ulsterbank.co.uk/?extcam=U_EMC_0_MTA_MTAGen_MT03692_Link_3" target="_blank"><img src="images/ub-core-ca-hero-bot.jpg" width="640" style="display:block; height:auto;" border="0" class="hide" alt=""></a>
+
+	                                </td>
+	                            </tr>
+
+	                        </table>
+	                        <!--[if !mso]><!-- -->
+	                        <div class="mobileOn" style="font-size: 0; width:0; max-height: 0; overflow: hidden; display: none; ">
+	                            <table bgcolor="#002a66" width="320" cellspacing="0" cellpadding="0" border="0" class="mobile mobileOn" align="left" style="mso-hide:all;display:none;max-height:0px;overflow:hidden; display:table!important;">
+	                                <tr>
+	                                    <td bgcolor="#002a66" width="124" align="left" valign="top" style="font-family: Arial, sans-serif;font-size:11px;line-height:13px;;color:#ffffff; padding-left:16px;">
+	                                        We're making changes to your <strong>ufirstgold and savings account(s)</strong>
+	                                    </td>
+	                                    <td align="left" valign="top">
+	                                        <a href="http://e.rbs.com/?RREhFv4KH.n7RnJxM-gLLbJ1PfWct4wQR&amp;http://digital.ulsterbank.co.uk/?extcam=U_EMC_0_MTA_MTAGen_MT03692_Link_3" target="_blank">
+	                                                    <img src="images/ub-core-ca-hero-mid-right_mob.jpg" width="179" height="48" style="display:block; height:auto;" border="0" class="img_mob" alt="">
+	                                                </a>
+	                                    </td>
+	                                </tr>
+	                                <tr>
+	                                    <td colspan="2" align="center" style="color: #000000; font-size: 12px; line-height: 18px;">
+	                                        <a href="http://e.rbs.com/?RREhFv4KH.n7RnJxM-gLLbJ1PfWct4wQR&amp;http://digital.ulsterbank.co.uk/?extcam=U_EMC_0_MTA_MTAGen_MT03692_Link_3" target="_blank"><img src="images/ub-core-ca-hero-bot_mob.jpg" width="640" style="display:block; height:auto;" border="0" class="img_mob" alt=""></a>
+	                                    </td>
+	                                </tr>
+	                            </table>
+	                        </div>
+	                        <!--<![endif]-->
+	                    </td>
+	                </tr>
+	        
+	                <tr>
+	                    <td align="center" valign="top">
+
+	                        <table width="90%" border="0" cellspacing="0" cellpadding="0">
+
+	                            <tr>
+	                                <td align="left" valign="top" style="padding-top:16px;font-family: Arial, sans-serif;font-size:13px;line-height:16px;color:#002664;">
+	                                    Hello Navid,
+
+	                                </td>
+	                            </tr>
+	                          
+	                        
+	                          	<tr>
+	                                <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px"></td>
+	                            </tr>
+	                            <tr>
+	                                <td align="left" valign="top" style="font-family: Arial, sans-serif;font-size:13px;line-height:16px;color:#002664;">
+	                                    We want to give you plenty of notice about some changes we're making to your ufirstgold and instant access savings account(s). From 13 January 2018 we're simplifying our accounts and fees, and changing our terms in line with new regulations. Please take time to read the information and understand how these changes might affect you. We've also included your new <a href="http://e.rbs.com/?7RJhFv4KEan18ZEnm-crLPT7gfWOYlw77#simpleTerms" style="color:#002664; font-weight:700;">Current and Savings Account Terms</a> below.
+	                                </td>
+	                            </tr>
+							
+
+								<tr>
+	                                <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px"></td>
+	                            </tr>
+	                            <tr>
+	                                <td align="left" valign="top" style="font-family: Arial, sans-serif;font-size:13px;line-height:16px;color:#002664;">
+	                                    We hope you're happy to keep your account, but, if not, you're always free to change or close your account, although we'd be sorry to see you go. You can view our <a href="http://e.rbs.com/?eREh.vGdE.41knHx0-cL4n5QniWOtlDQe&amp;http://digital.ulsterbank.co.uk/?extcam=U_EMC_0_MTA_MTAGen_MT03692_Link_4" target="_blank" style="color:#002664; font-weight:700;">full account range</a>, or get in touch and we'll be happy to take you through your options and help you with whatever you want to do next.
+	                                </td>
+	                            </tr>
+	                            <tr>
+	                                <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px"></td>
+	                            </tr>
+	                            <tr>
+	                                <td align="left" valign="top" style="font-family: Arial, sans-serif;font-size:13px;line-height:16px;color:#002664;">
+	                                    If you've more than one current account with us, we'll contact you about each one separately.
+	                                </td>
+	                            </tr>
+	                         
+
+	                        </table>
+	                    </td>
+	                </tr>
+	              
+	                <tr>
+	                    <td align="center" valign="top">
+	                      	<table width="90%" border="0" cellspacing="0" cellpadding="0">
+	                            <tr>
+	                                <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px"></td>
+	                            </tr>
+	                          	<tr>
+	                                <td align="left" valign="top" style="font-family: Arial, sans-serif;font-size:13px;line-height:16px;color:#002664;">
+	                                    Kind regards,
+	                                    <br>
+	                                  	<br>
+	                                  	<strong>The Current and Savings Account Team</strong>
+	                                </td>
+	                            </tr>
+							</table>
+						</td>
+	                </tr>
+	                <tr>
+	                   <td height="30" style="mso-line-height-rule:exactly; font-size:30px; line-height:30px"></td>
+	                </tr>
+	              	<tr>
+	                    <td align="center" valign="top">
+	                        <table width="90%" border="0" cellspacing="0" cellpadding="0">
+	                            <tr>
+	                                <td align="left" valign="top" style="font-family: Arial, sans-serif;font-size:16px;line-height:16px;color:#00a8b4;">
+	                                    <a name="top"></a><strong>A quick overview <span style="font-size:10px;">(scroll down for full details)</span></strong>
+	                                </td>
+	                            </tr>
+	                        </table>
+	                    </td>
+	                </tr>
+	              
+	                <tr>
+	                    <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px"></td>
+	                </tr>
+
+	                <!-- UB SECTION 3 QUICK OVERVIEW CA & CAS start -->
+	                <tr>
+	                    <td align="center">
+	                        <table width="90%" border="0" cellspacing="0" cellpadding="0">
+	                            <tr>
+	                                <td align="center" valign="top" width="45%" class="stack_block width_full">
+	                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="">
+	                                        <tr>
+	                                            <td align="center">
+	                                                <table width="100%" height="70" border="0" cellspacing="0" cellpadding="0" cdlass="" bgcolor="#00adb9">
+	                                                    <tr>
+	                                                        <td colspan="2" align="right" valign="middle">
+	                                                            <img src="images/ub-core-sav-top-right-green.gif" width="18" style="display:block; height:auto;" border="0" class="" alt="">
+	                                                        </td>
+	                                                    </tr>
+	                                                    <tr>
+	                                                        <td align="center" valign="middle" width="40">
+	                                                            <img src="images/overdraft-icon-2.jpg" height="40" width="30" style="display:block; height:auto" border="0" class="" alt="">
+	                                                        </td>
+	                                                        <td align="left" valign="middle" style="">
+	                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="" bgcolor="#00adb9">
+	                                                                <tr>
+	                                                                    <td align="left" valign="middle" style="font-family: Arial, Helvetica, sans-serif; color: #ffffff; mso-line-height-rule:exactly; font-size: 13px;line-height:normal; text-align: left;">
+	                                                                    <a href="http://e.rbs.com/?7RJhFv4KEan18ZEnm-crLPT7gfWOYlw77#overdraft" style="color:#ffffff;">The overdraft fees and interest rates on your current account(s) are changing</a>
+	                                                                    </td>
+	                                                                </tr>
+	                                                                
+	                                                            </table>                                                                    
+	                                                        </td>
+	                                                    </tr>
+	                                                    <tr>
+	                                                        <td colspan="2" align="right" valign="bottom">
+	                                                            <img src="images/ub-core-sav-bot-right-green.gif" width="18" style="display:block; height:auto;" border="0" class="" alt="">
+	                                                        </td>
+	                                                    </tr>
+	                                                </table>
+	                                            </td>
+	                                        </tr>
+	                                    </table>
+	                                </td>
+	                            </tr>
+	                        <tr>
+	                            <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+	                        </tr>
+	                            <tr>
+	                                <td align="center" valign="top" width="45%" class="stack_block width_full pt10">
+	                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="">
+	                                        <tr>
+	                                            <td align="center">
+	                                                <table width="100%" height="80" border="0" cellspacing="0" cellpadding="0" class="" bgcolor="#b7be16">
+	                                                    <tr>
+	                                                        <td align="right" valign="middle">
+	                                                            <img src="images/ub-care-cas-top-right-lightG.gif" width="18" style="display:block; height:auto;" border="0" class="" alt="">
+	                                                        </td>
+	                                                    </tr>
+	                                                    <tr>
+	                                                        <td align="left" valign="middle">
+	                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="" bgcolor="#b7be16">
+	                                                                <tr>
+	                                                                    <td align="center" valign="middle" width="40">
+	                                                                        <img src="images/cas-pound-icon-2.jpg" height="40" width="30" style="display:block; height:auto" border="0" class="" alt="">
+	                                                                    </td>
+	                                                                    <td rowspan="2" align="left" valign="middle">
+	                                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="" bgcolor="#b7be16">
+	                                                                            <tr>
+	                                                                                <td align="left" valign="middle" style="font-family: Arial, Helvetica, sans-serif; color: #ffffff; mso-line-height-rule:exactly; font-size: 13px;line-height:normal; text-align: left;">
+	                                                                                <a href="http://e.rbs.com/?7RJhFv4KEan18ZEnm-crLPT7gfWOYlw77#balance" style="color:#ffffff;">Your available balance at the weekend could be affected by changes to payment processes</a>
+	                                                                                </td>
+	                                                                                </tr>
+	                                                                                <tr>
+	                                                                                <td align="left" valign="middle" style="padding-top:8px; font-family: Arial, Helvetica, sans-serif; color: #ffffff; mso-line-height-rule:exactly; font-size: 13px;line-height:normal; text-align: left;">
+	                                                                                <a href="http://e.rbs.com/?7RJhFv4KEan18ZEnm-crLPT7gfWOYlw77#cheques" style="color:#ffffff;">Cheques will start to clear quicker</a>
+	                                                                                </td>
+	                                                                            </tr>
+	                                                                        </table>
+	                                                                    </td>
+	                                                                </tr>
+
+	                                                            </table>
+	                                                        </td>
+	                                                    </tr>
+	                                                    <tr>
+	                                                        <td align="right" valign="bottom">
+	                                                            <img src="images/ub-core-cas-bot-right-lightG.gif" width="18" style="display:block; height:auto;" border="0" class="" alt="">
+	                                                        </td>
+	                                                    </tr>
+	                                                </table>
+	                                            </td>
+	                                        </tr>
+	                                    </table>
+	                                </td>
+	                            </tr>
+	                        </table>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+	                </tr>
+	                <tr>
+	                    <td align="center">
+	                        <table width="90%" border="0" cellspacing="0" cellpadding="0">
+	                            <tr>
+	                                <td align="center" valign="top" width="45%" class="stack_block width_full">
+	                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="">
+	                                        <tr>
+	                                            <td align="center">
+	                                                <table width="100%" height="90" border="0" cellspacing="0" cellpadding="0" class="" bgcolor="#f2b715">
+	                                                    <tr>
+	                                                        <td align="right" valign="top">
+	                                                            <img src="images/ub-core-cas-top-right-orange.gif" width="18" style="display:block; height:auto;" border="0" class="" alt="">
+	                                                        </td>
+	                                                    </tr>
+
+	                                                    <tr>
+	                                                        <td align="center">
+	                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="" bgcolor="#f2b715">
+	                                                                <tr>
+	                                                                    <td align="center" valign="middle" width="40">
+	                                                                        <img src="images/cas-regul-icon-2.jpg" height="40" width="30" style="display:block; height:auto" border="0" class="" alt="">
+	                                                                    </td>
+	                                                                    <td align="left" valign="middle">
+	                                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="" bgcolor="#f2b715">
+	                                                                        <tr>
+	                                                                            <td align="left" valign="middle" style="font-family: Arial, Helvetica, sans-serif; color: #ffffff; mso-line-height-rule:exactly; font-size: 13px;line-height:normal; text-align: left;">
+	                                                                            <a href="http://e.rbs.com/?7RJhFv4KEan18ZEnm-crLPT7gfWOYlw77#payReg" style="color:#ffffff;">Payment Regulations change in January 2018, we've explained the main changes</a>
+	                                                                            </td>
+	                                                                            </tr>
+	                                                                            <tr>
+	                                                                            <td align="left" valign="middle" style="padding-top:8px; font-family: Arial, Helvetica, sans-serif; color: #ffffff; mso-line-height-rule:exactly; font-size: 13px;line-height:normal; text-align: left;">
+	                                                                            <a href="http://e.rbs.com/?7RJhFv4KEan18ZEnm-crLPT7gfWOYlw77#simpleTerms" style="color:#ffffff;">We've simplified our current and savings account terms; they're now easier to understand</a>
+	                                                                            </td>
+	                                                                        </tr>
+	                                                                        </table>
+	                                                                    </td>
+	                                                                </tr>
+	                                                            </table>
+	                                                        </td>
+	                                                    </tr>
+	                                                    <tr>
+	                                                        <td align="right" valign="bottom">
+	                                                            <img src="images/ub-core-cas-bot-right-orange.gif" width="18" style="display:block; height:auto;" border="0" class="" alt="">
+	                                                        </td>
+	                                                    </tr>
+	                                                </table>
+	                                            </td>
+	                                        </tr>
+	                                    </table>
+	                                </td>
+	                            </tr>
+	                            <tr>
+	                                <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+	                            </tr>
+	                            <tr>
+	                                <td align="center" valign="top" width="45%" class="stack_block width_full pt10">
+	                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="">
+	                                        <tr>
+	                                            <td align="center">
+	                                                <table width="100%" height="50" border="0" cellspacing="0" cellpadding="0" class="" bgcolor="#ab3388">
+	                                                    <tr>
+	                                                        <td align="right" valign="top">
+	                                                            <img src="images/ub-core-top-right-purple.gif" width="20" style="display:block; height:auto;" border="0" class="" alt="">
+	                                                        </td>
+	                                                    </tr><tr>
+	                                                        <td align="left" valign="middle">
+	                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="" bgcolor="#ab3388">
+	                                                                <tr>
+	                                                                    <td align="center" valign="middle" width="40">
+	                                                                        <img src="images/piggybank-2_v2.jpg" height="15" width="30" style="display:block; height:auto" border="0" class="" alt="">
+	                                                                    </td>
+	                                                                    <td align="left" valign="middle" style="font-family: Arial, Helvetica, sans-serif; color: #ffffff; text-decoration: none; font-size: 13px;line-height:normal;text-decoration: underline; text-align: left;">
+	                                                                        <a href="http://e.rbs.com/?7RJhFv4KEan18ZEnm-crLPT7gfWOYlw77#topTips" style="color:#ffffff;">Top tips for keeping on top of your money</a>
+	                                                                    </td>
+	                                                                </tr>
+	                                                            </table>
+	                                                        </td>
+	                                                    </tr>
+	                                                    <tr>
+	                                                        <td align="right" valign="bottom">
+	                                                            <img src="images/ub-core-bot-right-purple.gif" width="20" style="display:block; height:auto;" border="0" class="" alt="">
+	                                                        </td>
+	                                                    </tr>
+	                                                </table>
+	                                            </td>
+	                                        
+	                                    </tr></table>
+	                                </td>
+	                            
+	                        </tr></table>
+	                    </td>
+	                </tr>
+
+	                <tr>
+	                    <td height="15" style="mso-line-height-rule:exactly; font-size:15px; line-height:15px;"></td>
+	                </tr>
+	              	<!-- UB SECTION 3 QUICK OVERVIEW CA & CAS end -->
+	              
+	              
+	              	<!-- UB SECTION 3 CTA start -->
+	                <tr>
+	                    <td align="center" valign="top" style="padding-top:24px;" bgcolor="#b7be16">
+	                        <table width="90%" border="0" cellspacing="0" cellpadding="0" class="">
+	                            <tr>
+	                                <td align="left" valign="top" class="stack_block width_full" width="33%">
+	                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="">
+	                                        <tr>
+	                                            <td align="center" valign="middle" class="stack_block" height="28">
+	                                                <a href="http://e.rbs.com/?RRJgF24KH-41knHPMecW4n51niycYlw7R&amp;http://digital.ulsterbank.co.uk/?extcam=U_EMC_0_MTA_MTAGen_MT03692_Link_5" target="_blank"><img src="images/mouse-icon.gif" width="24" style="display:block; height:auto;" border="0" class="" alt=""></a>
+	                                            </td>
+	                                        </tr>
+	                                        <tr>
+	                                            <td align="center" valign="top" class="stack_block" style="padding-top:6px;font-family: Arial, Helvetica, sans-serif; color: #ffffff; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px; font-weight:700;">
+	                                              <a href="http://e.rbs.com/?RRJgF24KH-41knHPMecW4n51niycYlw7R&amp;http://digital.ulsterbank.co.uk/?extcam=U_EMC_0_MTA_MTAGen_MT03692_Link_5" target="_blank" style="color:#ffffff; text-decoration: none;">ulsterbank.co.uk</a>
+	                                              
+	                                            </td>
+	                                        </tr>
+	                                    </table>
+	                                </td>
+	                                <td align="left" valign="top" class="stack_block width_full pt16" width="33%">
+	                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="">
+	                                        <tr>
+	                                            <td align="center" valign="middle" class="stack_block" height="28">
+	                                                <img src="images/24hrs-icon.gif" width="26" style="display:block; height:auto;" border="0" class="" alt="">
+	                                            </td>
+	                                        </tr>
+	                                        <tr>
+	                                            <td align="center" valign="top" class="stack_block" style="padding-top:6px;font-family: Arial, Helvetica, sans-serif; color: #ffffff; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px; font-weight:700;">
+	                                                Call us on 03457 424 365<br> (Minicom 0800 015 4422)<br><br> From abroad +44 289 053 8033<br> (Minicom +44 800 015 4422)
+	                                            </td>
+	                                        </tr>
+	                                    </table>
+	                                </td>
+	                                <td align="left" valign="top" class="stack_block width_full pt16" width="33%">
+	                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="">
+
+	                                      
+	                                        <!-- private flag = N start -->
+	                                        <tr>
+	                                            <td align="center" valign="middle" class="stack_block" height="28">
+	                                                <img src="images/face-to-face-white-icon.gif" width="24" style="display:block; height:auto;" border="0" class="" alt="">
+	                                            </td>
+	                                        </tr>
+	                                        <tr>
+	                                            <td align="center" valign="top" class="stack_block" style="padding-top:6px;font-family: Arial, Helvetica, sans-serif; color: #ffffff; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px; font-weight:700;">
+	                                                Pop into branch for a face-to-face chat
+	                                            </td>
+	                                        </tr>
+	                                      	<!-- private flag = N end -->
+	                                      
+	                                      
+	                                      
+	                                      
+	                                    </table>
+	                                </td>
+	                            </tr>
+	                            <tr>
+	                                <td colspan="3" height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px;"></td>
+	                            </tr>
+	                            <tr>
+	                                <td align="center" colspan="3" style="padding-top:6px;font-family: Arial, Helvetica, sans-serif; color: #ffffff; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">Calls may be recorded and they may cost more if you call from overseas.</td>
+	                            </tr>
+	                            <tr>
+	                                <td colspan="3" height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px;"></td>
+	                            </tr>
+	                        </table>
+	                    </td>
+	                </tr>
+	              	<tr>
+	                  <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px"></td>
+	                </tr>
+                </table>
+			</td>
+		</tr>
+		<tr>
+			<td valign="top" align="center">
+
+				<div class="wrapper" style="min-width: 640px;">
+					<table id="CarouselWrapper" width="640" border="0" cellpadding="0" cellspacing="0" bgcolor="#ffffff" class="shrink" style="width:640px; margin:0 auto;">
+						<tr>
+							<td>
+								<table class="CarouselMain" width="640" bgcolor="#FFFFFF" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+									<tr>
+										<td valign="top">
+											<table border="0" cellpadding="0" cellspacing="0">
+												<tr>
+													<td style="line-height:1px; font-size:0px;">
+														<table border="0" cellpadding="0" cellspacing="0">
+															<tr>
+																<td align="left" height="70" class="h50">
+																</td>
+															</tr>
+														</table>
+														<!--[if mso]>
+															<p style="display: none;">
+														<![endif]-->
+														<form action ="foo">
+														<input class="yahoo ★" type="radio" name="action" checked="checked" id="slide-1" style="display: none!important; max-height: 0; visibility: hidden;" />
+														<span style></span>
+														<!--[if mso]>
+															</p>
+														<![endif]-->
+														<table border="0" cellpadding="0" cellspacing="0">
+															<tr>
+																<td style="line-height:1px; font-size:0px;">
+																	<!--[if mso]>
+																		<p style="display: none;">
+																	<![endif]-->
+																	<input class="yahoo ★" type="radio" name="action" id="slide-2" style="display: none!important; max-height: 0; visibility: hidden;" />
+																	<span style></span>
+																	<!--[if mso]>
+																		</p>
+																	<![endif]-->
+																	<table border="0" cellpadding="0" cellspacing="0">
+																		<tr>
+																			<td style="line-height:1px; font-size:0px;">
+																				<!--[if mso]><p style="display: none;"><![endif]-->
+																				<input class="yahoo ★" type="radio" name="action" id="slide-3" style="display: none!important; max-height: 0; visibility: hidden;" />
+																				<span style></span>
+																				</form>
+																				<!--[if mso]></p><![endif]-->
+																				<table border="0" cellpadding="0" cellspacing="0">
+																					<tr>
+																						<td>
+																							<table class="swoosh ★" id="★" border="0" cellpadding="0" cellspacing="0">
+																								<tr>
+																									<td class="slide1-content" >
+																										<table width="100%" border="0" cellpadding="0" cellspacing="0">
+																												
+																					                        <tr>
+																					                            <td align="center" valign="top">
+																					                                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="" bgcolor="#00adb9">
+																					                                    <tr>
+																					                                        <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td align="center" valign="top" class="stack_block">
+																					                                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                <tr>
+																					                                                    <td align="center" valign="top" width="40">
+																					                                                        <img src="images/overdraft-ufg-7.gif" width="30" style="display:block; height:auto;" border="0" class="" alt="">
+																					                                                    </td>
+																					                                                    <td align="left" valign="middle" class="">
+																					                                                        <a name="overdraft" class="pl0" style="font-family: Arial, Helvetica, sans-serif; color: #ffffff; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px; font-weight:700; padding-right:10px; padding-left:10px;">New overdraft fees and interest rates for your current account(s)</a>
+																					                                                    </td>
+																					                                                </tr>
+																					                                            </table>
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                    </tr>
+																					                                </table>
+																					                            </td>
+																					                        </tr>
+																					                        <tr>
+																					                            <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                        </tr>
+																					                        <tr>
+																					                            <td align="center" valign="top" bgcolor="#ffffff" style="padding-top:8px;">
+																					                                <table width="90%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                  <tr>
+																					                            		<td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                       	 		  </tr>                                   
+																					                                    <tr>
+
+																					                                        <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #00adb9; text-decoration: none;mso-line-height-rule:exactly; font-size: 13px; line-height:15px; font-weight:700;">
+																					                                            Changes to overdraft fees and interest rates
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color:#002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                            We're making a number of changes to our overdraft fees and interest rates to make them simpler to understand. Here's everything you need to know.
+																					                                        </td>
+																					                                    </tr>
+
+
+																					                                    <tr>
+																					                                        <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px;"></td>
+																					                                    </tr>
+
+																					                                    <tr>
+																					                                        <td align="center" valign="top" class="stack_block" style="padding-bottom:8px;" bgcolor="#e5f7f8">
+																					                                            <table width="95%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                <tr>
+																					                                                    <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px;"></td>
+																					                                                </tr>
+
+																					                                                <tr>
+																					                                                    <td align="center" valign="top">
+																					                                                        <table width="95%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" width="30">
+																					                                                                    <img src="images/small-cal-icon.gif" width="15" style="display:block; height:auto;" border="0" class="" alt="">
+																					                                                                </td>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #00a8b4; text-decoration: none;  mso-line-height-rule:exactly; font-size: 13px; line-height:16px; font-weight:700;">
+																					                                                                    Arranged overdraft<br> Changes from 13 January 2018:
+																					                                                                </td>
+																					                                                            </tr>
+
+																					                                                        </table>
+																					                                                    </td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td align="center" valign="top">
+																					                                                        <table width="95%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" width="20" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; font-size: 13px;line-height:normal; font-weight:700;">
+																					                                                                    •
+																					                                                                </td>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                                                    We're reducing your arranged overdraft buffer from £500 to £250
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" width="20" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; font-size: 13px;line-height:normal; font-weight:700;">
+																					                                                                    •
+																					                                                                </td>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                                                    If you go over the £250 buffer, you'll be charged a monthly arranged overdraft usage fee of £6 plus interest
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" width="20" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; font-size: 13px;line-height:normal; font-weight:700;">
+																					                                                                    •
+																					                                                                </td>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                                                    The arranged overdraft interest will go up from 15.90% EAR to 19.89% EAR
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                        </table>
+																					                                                    </td>
+																					                                                </tr>
+
+																					                                                <tr>
+																					                                                    <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                            </table>
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px;"></td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td align="center" valign="top" class="stack_block" style="padding-bottom:8px;" bgcolor="#e5f7f8">
+																					                                            <table width="95%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                <tr>
+																					                                                    <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px;"></td>
+																					                                                </tr>
+
+																					                                                <tr>
+																					                                                    <td align="center" valign="top">
+																					                                                        <table width="95%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" width="30">
+																					                                                                    <img src="images/small-cal-icon.gif" width="15" style="display:block; height:auto;" border="0" class="" alt="">
+																					                                                                </td>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #00a8b4; text-decoration: none;  mso-line-height-rule:exactly; font-size: 13px; line-height:16px; font-weight:700;">
+																					                                                                    Unarranged overdraft<br>Changes from 13 January 2018:
+																					                                                                </td>
+																					                                                            </tr>
+
+																					                                                        </table>
+																					                                                    </td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td align="center" valign="top">
+																					                                                        <table width="95%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" width="20" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; font-size: 13px;line-height:normal; font-weight:700;">
+																					                                                                    •
+																					                                                                </td>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                                                    We're removing the £20 maintenance fee and the £15 paid referral fee
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" width="20" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; font-size: 13px;line-height:normal; font-weight:700;">
+																					                                                                    •
+																					                                                                </td>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                                                    We're introducing a £10 buffer for unarranged overdrafts
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" width="20" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; font-size: 13px;line-height:normal; font-weight:700;">
+																					                                                                    •
+																					                                                                </td>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                                                    If you go over the £10 buffer, you'll pay a daily unarranged overdraft usage fee of £8 (max £72 a month)
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" width="20" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; font-size: 13px;line-height:normal; font-weight:700;">
+																					                                                                    •
+																					                                                                </td>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                                                    If we decide not to make a payment, you'll now pay an unpaid transaction fee of £8 (max £8 a month)
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                        </table>
+																					                                                    </td>
+																					                                                </tr>
+
+																					                                                <tr>
+																					                                                    <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                            </table>
+																					                                        </td>
+																					                                    </tr>
+																					                                </table>
+																					                            </td>
+																					                        </tr>
+																					                        <tr>
+																					                            <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                        </tr>
+																					                        <tr>
+																					                            <td align="center" valign="top" bgcolor="#ffffff" style="padding-top:8px;">
+																					                                <table width="90%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                  <tr>
+																					                            		<td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                       	 		  </tr> 
+																					                                  <tr>
+																					                                        <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color:#002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                            We won't charge you more than £80 in a monthly charging period for an unarranged overdraft or any unpaid transactions.
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color:#002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px; font-weight:700;">
+																					                                            What's an arranged overdraft?
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color:#002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                            An arranged overdraft allows you to access more than you have in your account up to an agreed limit. You need to apply for an arranged overdraft, it's not automatic and you will only pay for it if you use it.
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                    </tr>
+
+																					                                    <tr>
+																					                                        <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color:#002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px; font-weight:700;">
+																					                                            What's an unarranged overdraft?
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color:#002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                            An unarranged overdraft is when your balance goes below £0 and you don't have an arranged overdraft in place, or you go over your arranged overdraft limit.
+																					                                        </td>
+																					                                    </tr>
+
+																					                                    <tr>
+																					                                        <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px;"></td>
+																					                                    </tr>
+
+
+																					                                    <tr>
+																					                                        <td align="center" valign="top" class="stack_block" style="padding-bottom:8px;" bgcolor="#e5f6f7">
+																					                                            <table width="95%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                <tr>
+																					                                                    <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td align="left" valign="top" width="50">
+																					                                                        <img src="images/cas-alert-icon.gif" width="38" style="display:block; height:auto;" border="0" class="" alt="">
+																					                                                    </td>
+																					                                                    <td align="left" valign="top">
+																					                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" style="padding-top:12px;font-family: Arial, sans-serif;font-size:13px;line-height:16px;color:#002a66;">
+																					                                                                    See more details on how these changes to fees and interest rates impact you
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td align="center" valign="top" style="padding-top:12px;">
+																					                                                                    <div>
+																					                                                                        <!--[if mso]>
+																					                                                                          <v:rect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="#Page11" style="height:31px;v-text-anchor:middle;width:210px;" stroke="f" fillcolor="#00adb9"> 
+																					                                                                            <w:anchorlock/>
+																					                                                                            <center>
+																					                                                                            <![endif]-->
+																					                                                                                <a href="http://e.rbs.com/?7RJhFv4KEan18ZEnm-crLPT7gfWOYlw77#Page11" style="background-color:#00adb9;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:13px;font-weight:normal;line-height:31px;text-align:center;text-decoration:none;width:210px;-webkit-text-size-adjust:none;">View now</a>
+																					                                                                            <!--[if mso]>
+																					                                                                            </center>
+																					                                                                          </v:rect>
+																					                                                                        <![endif]-->
+																					                                                                    </div>
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                        </table>
+																					                                                    </td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                            </table>
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px;"></td>
+																					                                    </tr>
+																					                                </table>
+																					                            </td>
+																					                        </tr>
+																										</table>
+																									</td>
+																								</tr>
+																								<tr>
+																									<td height="10" style="line-height:1px;font-size:1px;display:block;">&nbsp;</td>
+																								</tr>
+																								<tr>
+																									<td class="slide2-content" >
+																										<table width="100%" border="0" cellpadding="0" cellspacing="0">
+																											<tr>
+																					                            <td align="center" valign="top">
+																					                                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="" bgcolor="#b7be16">
+																					                                    <tr>
+																					                                        <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td align="center" valign="top" class="stack_block">
+																					                                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                <tr>
+																					                                                    <td align="center" valign="top" width="40">
+																					                                                        <img src="images/pound-icon-lightG.gif" width="30" style="display:block; height:auto;" border="0" class="" alt="">
+																					                                                    </td>
+																					                                                    <td align="left" valign="middle" class="pl5" colspan="2" style="font-family: Arial, Helvetica, sans-serif; color: #ffffff; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px; font-weight:700; padding-right:10px; padding-left:10px;">
+																					                                                        <a name="balance" class="pl0" style="font-family: Arial, Helvetica, sans-serif; color: #ffffff; text-decoration: none; font-size: 12px;">Changes to weekend payments and the effect on your available balance</a>
+																					                                                    </td>
+																					                                                </tr>
+																					                                            </table>
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                    </tr>
+																					                                </table>
+																					                            </td>
+																					                        </tr>
+																					                        <tr>
+																					                            <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                        </tr>
+																					                        <tr>
+																					                            <td align="center" valign="top" bgcolor="#ffffff" style="padding-top:8px;">
+																					                                <table width="90%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                    <tr>
+																					                                        <td align="center" valign="top" class="stack_block" style="padding-bottom:8px;">
+																					                                            <table width="95%" border="0" cellspacing="0" cellpadding="0" class="">
+
+																					                                                <tr>
+																					                                                    <td align="left" valign="top" width="38">
+																					                                                        <img src="images/big-cal-light-green-icon.jpg" width="28" style="display:block; height:auto;" border="0" class="" alt="">
+																					                                                    </td>
+																					                                                    <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #b7be16; text-decoration: none;mso-line-height-rule:exactly; font-size: 16px; line-height:19px;font-weight:700;">
+																					                                                        Changes to when payments go into and come out of your account(s) at the weekend
+																					                                                    </td>
+																					                                                </tr>
+																					                                            </table>
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color:#002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                            From 13 January 2018 the way regular payments go into and come out of your account(s) over the weekend is going to change, and your available balance may be affected.
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color:#002a66; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+
+																					                                            Here's what you need to know, and ways to help avoid any impact on your weekend finances:
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px;"></td>
+																					                                    </tr>
+
+																					                                    <tr>
+																					                                        <td align="center" valign="top" class="stack_block" style="padding-bottom:8px;" bgcolor="#f8f8e7">
+																					                                            <table width="95%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                <tr>
+																					                                                    <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color:#b7be16; text-decoration: none;mso-line-height-rule:exactly; font-size: 16px; line-height:19px;font-weight:700;">
+																					                                                        Payments into your account at the weekend (like your salary, pension or other regular income)
+																					                                                    </td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td align="center" valign="top">
+																					                                                        <table width="95%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" width="30">
+																					                                                                    <img src="images/small-cal-icon.gif" width="15" style="display:block; height:auto;" border="0" class="" alt="">
+																					                                                                </td>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                                                    <strong>Up until 13 January 2018</strong>: Any payments due into your account on a Monday are available to you from the Saturday.
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" width="30">
+																					                                                                    <img src="images/small-cal-icon.gif" width="15" style="display:block; height:auto;" border="0" class="" alt="">
+																					                                                                </td>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                                                    <strong>From 13 January 2018:</strong> Any payments due into your account on a Monday will only be available to you from the Monday and not the Saturday as before.
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                        </table>
+																					                                                    </td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                            </table>
+																					                                        </td>
+																					                                    </tr>
+																					                                </table>
+																					                            </td>
+																					                        </tr>
+																					                        <tr>
+																					                            <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                        </tr>
+																					                        <tr>
+																					                            <td align="center" valign="top" bgcolor="#ffffff" style="padding-top:8px;">
+																					                                <table width="90%" border="0" cellspacing="0" cellpadding="0" class="">
+
+																					                                    <tr>
+																					                                        <td align="center" valign="top" class="stack_block" style="padding-bottom:8px;" bgcolor="#f8f8e7">
+																					                                            <table width="95%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                <tr>
+																					                                                    <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color:#b7be16; text-decoration: none;mso-line-height-rule:exactly; font-size: 16px; line-height:19px;font-weight:700;">
+																					                                                        Payments out of your account at the weekend (like direct debits and standing orders)
+																					                                                    </td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td align="center" valign="top">
+																					                                                        <table width="95%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" width="30">
+																					                                                                    <img src="images/small-cal-icon.gif" width="15" style="display:block; height:auto;" border="0" class="" alt="">
+																					                                                                </td>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                                                    <strong>Up until 13 January 2018:</strong> Any payments due out of your account on a Monday are taken from your account on the Saturday morning, meaning you've less money to spend over the weekend.
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" width="30">
+																					                                                                    <img src="images/small-cal-icon.gif" width="15" style="display:block; height:auto;" border="0" class="" alt="">
+																					                                                                </td>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                                                    <strong>From 13 January 2018:</strong> Any payments due out of your account on a Monday will leave your account on the Monday, meaning this money will be still available to you over the weekend.
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                        </table>
+																					                                                    </td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                            </table>
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px;"></td>
+																					                                    </tr>
+
+																					                                    <tr>
+																					                                        <td align="center" valign="top" class="stack_block" style="padding-bottom:8px;" bgcolor="#b7be16">
+																					                                            <table width="95%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                <tr>
+																					                                                    <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td align="left" valign="top" width="48">
+																					                                                        <img src="images/alert-icon-lightG.gif" width="38" style="display:block; height:auto;" border="0" class="" alt="">
+																					                                                    </td>
+																					                                                    <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #ffffff; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px; padding-right: 10px;">
+																					                                                        Just make sure you've enough money in your account to cover the weekend and to make any Monday morning payments to avoid bank charges. Find out more about <a href="http://e.rbs.com/?RREhFvGdH.ZCR8HPM-gLLn5QPiWctlDQR&amp;https://supportcentre.ulsterbank.co.uk/1010293492?extcam=U_EMC_0_MTA_MTAGen_MT03692_Link_9" target="_blank" style="color:#ffffff; font-weight:700;">weekend payments</a>.
+																					                                                    </td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                            </table>
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px;"></td>
+																					                                    </tr>
+
+																					                                    <tr>
+																					                                        <td align="center" valign="top" class="stack_block" style="padding-bottom:8px; border: 1px solid #b7be16;">
+																					                                            <table width="95%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                <tr>
+																					                                                    <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td align="left" valign="top" width="35">
+																					                                                        <img src="images/mobile-icon-lightG.gif" width="25" style="display:block; height:auto;" border="0" class="" alt="">
+																					                                                    </td>
+																					                                                    <td align="left" valign="top">
+																					                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color:#b7be16; text-decoration: none; mso-line-height-rule:exactly; font-size: 13px; line-height:16px; padding-right: 10px; font-weight:700;">
+																					                                                                    Keeping an eye on your available balance
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px; padding-right: 10px;">
+																					                                                                    Our <a href="http://e.rbs.com/?egEhFv4KEIbCR8HxM-cL4nJQPfyOYlwQe&amp;http://digital.ulsterbank.co.uk/personal/ways-to-bank/mobile-banking.html?extcam=U_EMC_0_MTA_MTAGen_MT03692_Link_10" target="_blank" style="color:#002a66; font-weight:700;">mobile app</a> and the <a href="http://e.rbs.com/?RgJg.v4dZa47knHP0-gLLnJ1PfWOY4DQR&amp;http://digital.ulsterbank.co.uk/personal/ways-to-bank/text-alerts.html?extcam=U_EMC_0_MTA_MTAGen_MT03692_Link_11" target="_blank" style="color:#002a66; font-weight:700;">Text Alert</a> service are a great way of keeping track of your available balance.
+																					                                                                    
+																					                                                                  
+																					                                                                  	<!-- CAS start-->
+																					                                                                    See our <a href="http://e.rbs.com/?7RJhFv4KEan18ZEnm-crLPT7gfWOYlw77#topTips" style="color:#002a66; font-weight:700;">top tips</a> for staying on top of your balance.
+																					                                                                    <!-- CAS end-->
+																					                                                                  
+																					                                                                  
+																					                                                                  
+																					                                                                  
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                        </table>
+																					                                                    </td>
+
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                            </table>
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px;"></td>
+																					                                    </tr>
+
+																					                                </table>
+																					                            </td>
+																					                        </tr>
+																					                      
+																										</table>
+																									</td>
+																								</tr>
+																								<tr>
+																									<td height="10" style="line-height:1px;font-size:1px;display:block;">&nbsp;</td>
+																								</tr>
+																								<tr>
+																									<td class="slide3-content" >
+																										<table width="100%" border="0" cellpadding="0" cellspacing="0">
+																											<tr>
+																					                            <td align="center" valign="top">
+																					                                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="" bgcolor="#f2b715">
+																					                                    <tr>
+																					                                        <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td align="center" valign="top" class="stack_block">
+																					                                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                <tr>
+																					                                                    <td align="center" valign="top" width="40">
+																					                                                        <img src="images/regul-icon-small-orange.gif" width="30" style="display:block; height:auto;" border="0" class="" alt="">
+																					                                                    </td>
+																					                                                    <td align="left" valign="middle" class="pl0" style="font-family: Arial, Helvetica, sans-serif; color: #ffffff; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px; font-weight:700; padding-right:10px; padding-left:10px;">
+																					                                                        <a name="payReg" style="font-family: Arial, Helvetica, sans-serif; color: #ffffff; text-decoration: none; font-size: 12px;">Changes to Payment Regulations explained and new simplified terms</a>
+																					                                                    </td>
+																					                                                </tr>
+																					                                            </table>
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                    </tr>
+																					                                </table>
+																					                            </td>
+																					                        </tr>
+																					                        <tr>
+																					                            <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                        </tr>
+																					                        <tr>
+																					                            <td align="center" valign="top" bgcolor="#ffffff" style="padding-top:8px;">
+																					                                <table width="90%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                    <tr>
+																					                                        <td align="left" valign="top" class="stack_block" style="padding-bottom:8px;">
+																					                                            <table width="95%" border="0" cellspacing="0" cellpadding="0" class="">
+
+																					                                                <tr>
+																					                                                    <td align="left" valign="top" width="38">
+																					                                                        <img src="images/big-orange-cal-icon.jpg" width="28" style="display:block; height:auto;" border="0" class="" alt="">
+																					                                                    </td>
+																					                                                    <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color:#f2b715; text-decoration: none;mso-line-height-rule:exactly; font-size: 16px; line-height:19px;font-weight:700;">
+																					                                                        Changes to Payment Regulations
+																					                                                    </td>
+																					                                                </tr>
+																					                                            </table>
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color:#002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                            New regulations will come into effect on 13 January 2018 - making sure all European banks process payments in the same way, in an increasingly digital world.
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color:#f2b715; text-decoration: none; none;mso-line-height-rule:exactly; font-size: 16px; line-height:19px;font-weight:700;">
+																					                                            Here are the main changes:
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px;"></td>
+																					                                    </tr>
+
+																					                                    <tr>
+																					                                        <td align="center" valign="top" class="stack_block" style="padding-bottom:8px;" bgcolor="#fdf4dc">
+																					                                            <table width="95%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                <tr>
+																					                                                    <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px;"></td>
+																					                                                </tr>
+
+																					                                                <tr>
+																					                                                    <td align="center" valign="top">
+																					                                                        <table width="95%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px;font-weight:700;">
+																					                                                                    1.&nbsp;&nbsp;
+																					                                                                </td>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px; font-weight:700;">
+																					                                                                    With your permission, third party providers (TPPs) can access your information to provide their services
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px;font-weight:700;">
+																					                                                                    •&nbsp;&nbsp;
+																					                                                                </td>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                                                    New digital banking services are entering the market offered by us and TPPs. These will include new ways to pay for things online and tools that allow you to view all your accounts with different financial providers in one place. Before giving a TPP permission to access your account information you may wish to check that they're authorised by the Financial Conduct Authority (FCA) to provide their service.
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px;font-weight:700;">
+																					                                                                    •&nbsp;&nbsp;
+																					                                                                </td>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                                                    Some TPPs might ask you for your Anytime Internet Banking log in details and password to provide their service to you. If you decide to give them this information, this means that they'll be able to see and do anything you can on your accounts.
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px;font-weight:700;">
+																					                                                                    •&nbsp;&nbsp;
+																					                                                                </td>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                                                    If you give TPPs permission to access your accounts and account information, we're not responsible for what they <!-- CAS start -->may<!-- CAS end--> do.
+																					                                                                </td>
+																					                                                            </tr>
+
+																					                                                        </table>
+																					                                                    </td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+
+																					                                            </table>
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px;"></td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td align="center" valign="top">
+																					                                            <table width="90%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                <tr>
+																					                                                    <td align="left" valign="top" width="20" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px;font-weight:700;">
+																					                                                        2.
+																					                                                    </td>
+																					                                                    <td align="left" valign="top">
+																					                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px; font-weight:700;">
+																					                                                                    How we respond to payment related complaints
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td height="5" style="mso-line-height-rule:exactly; font-size:5px; line-height:5px;"></td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td colspan="2" align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                                                    We'll now aim to respond in writing within 15 working days.
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                        </table>
+																					                                                    </td>
+
+																					                                                </tr>
+
+
+																					                                                <tr>
+																					                                                    <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td align="left" valign="top" width="20" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px;font-weight:700;">
+																					                                                        3.
+																					                                                    </td>
+																					                                                    <td align="left" valign="top">
+																					                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px; font-weight:700;">
+																					                                                                    International payment fees
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td height="5" style="mso-line-height-rule:exactly; font-size:5px; line-height:5px;"></td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td colspan="2" align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                                                    If you make payments to an account outside the UK, you might see some changes to the way fees are paid. In some cases, you won't be able to pass your fees on to the person you're paying or pay their fees if that's what you did before. But don't worry, we'll always tell you what fees apply and what your options are before you make any payment.
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                        </table>
+																					                                                    </td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td align="left" valign="top" width="20" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px;font-weight:700;">
+																					                                                        4.
+																					                                                    </td>
+																					                                                    <td align="left" valign="top">
+																					                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                            <tr>
+																					                                                                <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none;  mso-line-height-rule:exactly; font-size: 12px; line-height:15px; font-weight:700;">
+																					                                                                    Money paid in error
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td height="5" style="mso-line-height-rule:exactly; font-size:5px; line-height:5px;"></td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td colspan="2" align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #002a66; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px;">
+																					                                                                    From 13 January all banks will start to share personal information to help a payer, who has paid money in error, to trace that money and claim it back.
+																					                                                                </td>
+																					                                                            </tr>
+																					                                                            <tr>
+																					                                                                <td height="5" style="mso-line-height-rule:exactly; font-size:5px; line-height:5px;"></td>
+																					                                                            </tr>
+																					                                                           
+																					                                                            <tr>
+																					                                                                <td height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                            </tr>
+
+																					                                                        </table>
+																					                                                    </td>
+																					                                                </tr>
+
+																					                                            </table>
+																					                                        </td>
+																					                                    </tr>
+																					                                    <tr>
+																					                                        <td align="center" valign="top" class="stack_block" style="padding-bottom:8px;" bgcolor="#f2b715">
+																					                                            <table width="95%" border="0" cellspacing="0" cellpadding="0" class="">
+																					                                                <tr>
+																					                                                    <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td align="left" valign="top" width="30">
+																					                                                        <img src="images/padlock-large-orange.gif" width="20" style="display:block; height:auto;" border="0" class="" alt="">
+																					                                                    </td>
+																					                                                    <td align="left" valign="top" class="" style="font-family: Arial, Helvetica, sans-serif; color: #ffffff; text-decoration: none; mso-line-height-rule:exactly; font-size: 12px; line-height:15px; padding-right: 10px;">
+																					                                                        Make sure you're keeping yourself safe and secure in an increasingly digital world. Check out some helpful suggestions in our <a href="http://e.rbs.com/?7RJhFv4KEan18ZEnm-crLPT7gfWOYlw77#topTips" style="color:#ffffff; font-weight:700;">top tips</a> below.
+																					                                                    </td>
+																					                                                </tr>
+																					                                                <tr>
+																					                                                    <td colspan="2" height="10" style="mso-line-height-rule:exactly; font-size:10px; line-height:10px;"></td>
+																					                                                </tr>
+																					                                            </table>
+																					                                        </td>
+																					                                    </tr>
+																					                                  	<tr>
+																					                                        <td height="20" style="mso-line-height-rule:exactly; font-size:20px; line-height:20px;"></td>
+																					                                    </tr>
+																					                                </table>
+																					                            </td>
+																					                        </tr>
+																					                      
+																										</table>
+																									</td>
+																								</tr>
+																								<tr>
+																									<td height="10" style="line-height:1px;font-size:1px;display:block;">&nbsp;</td>
+																								</tr>
+																							</table>
+																						</td>
+																					</tr>
+																				</table>
+																				
+																			</td>
+																		</tr>
+																	</table>
+																	
+																</td>
+															</tr>
+														</table>
+														<label class="button slide1 ★" for="slide-1" id="★" style="display: none; max-height: 0; visibility: hidden; font-size:1px; line-height:1px;">
+															<span class="hide" style="color:#ffffff;">One</span>
+														</label>
+														<label class="button slide2 ★" for="slide-2" id="★" style="display: none; max-height: 0; visibility: hidden; font-size:1px; line-height:1px;">
+															<span class="hide" style="color:#ffffff;">Two</span>
+														</label>
+														<label class="button slide3 ★" for="slide-3" id="★" style="display: none; max-height: 0; visibility: hidden; font-size:1px; line-height:1px;">
+															<span class="hide" style="color:#ffffff;">Three</span>
+														</label>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</td>
+		</tr>
+		<tr>
+	        <td align="center" valign="top">
+	            <table width="640" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF" class="table">
+					<tr>
+				        <td align="center" valign="top" style="padding-top:16px;padding-bottom:16px;" bgcolor="#ece7ef">
+				            <table width="90%" border="0" cellspacing="0" cellpadding="0" class="">
+				                <tr>
+				                    <td align="left" valign="top" class="stack_block" style="font-family: Arial, Helvetica, sans-serif; color: #002664; text-decoration: none; font-size: 11px;line-height:14px;">
+				                        <strong>About this email</strong>
+				                        <br>
+				                        <br> This email is confidential and intended for the addressee only. Please delete if that is not you.
+				                        <br>
+				                        <br> This is a service message designed to keep you informed of important information associated with your account. Please do not reply to this email as the address is not monitored.
+				                        <br>
+				                        <br> Visit our <a href="http://e.rbs.com/?eREh.2GKE-4Qk3JPM-PLLnDCciycY4D7e&amp;http://digital.ulsterbank.co.uk/personal/help-and-support.html?extcam=U_EMC_0_MTA_MTAGen_MT03692_Link_17" target="_blank" style="color:#002664;">Support Centre</a> if you have any queries and we'll be happy to help.
+				                        <br>
+				                        <br>
+				                        <strong>Important security information</strong>
+				                        <br>
+				                        <br> Ulster Bank (NI) will <strong>NEVER </strong> ask for your full PIN or Password when identifying you on the phone or online, and will <strong>NEVER </strong> ask for Card Reader codes on the phone or when logging in. Fraudsters may claim to be the bank to try and access security information.
+				                        <br>
+				                        <br> If you receive a call or email from Ulster Bank that you are suspicious about, cease the call immediately, or forward the email to <a href="mailto:phishing@ulsterbank.co.uk" target="_blank" style="color:#002664;">phishing@ulsterbank.co.uk</a>. Visit <a href="http://e.rbs.com/?egEh.v4KJI47e3JnmenOLxD7nfWOY4D7e&amp;http://digital.ulsterbank.co.uk/personal/security-centre.html?extcam=U_EMC_0_MTA_MTAGen_MT03692_Link_19" target="_blank" style="color:#002664;">ulsterbank.co.uk/security</a> for more information and advice.
+				                        <br>
+				                        <br><strong>Ulster Bank Limited. Registered Number R733 Northern Ireland. Registered Office 11-16 Donegall Square East, Belfast, BT1 5UB<br><br>Authorised by the Prudential Regulation Authority and regulated by the Financial Conduct Authority and the Prudential Regulation Authority.</strong>
+				                    </td>
+				                </tr>
+				            </table>
+				        </td>
+				    </tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>
